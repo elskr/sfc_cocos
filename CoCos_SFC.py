@@ -1,4 +1,4 @@
-#%%
+    #%%
 
 #INTRODUCTION
 
@@ -280,7 +280,6 @@ def create_kremer_model():
     model.param('N_fe', desc="plein emploi")
     model.param('nplw0', desc="part de defauts sur prets - composante exogene")
     model.param('nplw1', desc="relation entre part defauts sur prets et poids de la dette des menages")
-    model.param('nplw2', desc="relation entre part defauts sur prets et disponibilite du credit")
     model.param('omega0', desc="parametre influençant le salaire cible")
     model.param('omega1', desc="parametre influençant le salaire cible en lien avec la productivite du travail")
     model.param('omega2', desc="parametre influençant le salaire cible en lien avec le taux d emploi")
@@ -335,7 +334,7 @@ def create_kremer_model():
     model.add('L_wd - L_wd(-1) = NL_wd - NPLW')
     model.add('BUR_w = (REP_w + r_l(-1) * L_wd(-1)) / YP_w')
     model.add('NPLW = nplw * L_ws(-1)')
-    model.add('nplw = 0.1 + nplw0 + nplw1 * BUR_w(-1) - nplw2 * klim(-1)')
+    model.add('nplw = nplw0 + nplw1 * BUR_w(-1)')
     model.add('Vfma_w = V_w + L_ws')
     model.add('D_wd = Vfma_w')
     model.add('D_ws = D_wd')
@@ -591,9 +590,8 @@ parameters = {'chi1': 0.01962,
              'lambda64': 0.025,
              'lambda65': 0.025,
              'lambda66': 0.2,
-             'nplw0': 0.2,
+             'nplw0': 0.1,
              'nplw1': 0.25,
-             'nplw2': 0.2,
              'omega0': -0.20594,
              'omega1': 1,
              'omega2': 2,
@@ -775,7 +773,7 @@ scenar1aa.set_values(variables)
 for _ in range(40):
     scenar1aa.solve(iterations=1000, threshold=1e-6)
 
-scenar1aa.set_values({'KRT1': 0.21})    
+scenar1aa.set_values({'KRT1': 0.15})    
 scenar1aa.set_values({'nplw0': 0.3})
 
 
@@ -800,7 +798,7 @@ for _ in range(40):
 #for _ in range(50):
     scenar1ab.solve(iterations=1000, threshold=1e-6)
 
-scenar1ab.set_values({'KRT1': 0.21})
+scenar1ab.set_values({'KRT1': 0.15})
 scenar1ab.set_values({'nplw0': 0.45})
 
 
@@ -824,7 +822,7 @@ scenar1ac.set_values(variables)
 for _ in range(40):
     scenar1ac.solve(iterations=1000, threshold=1e-6)
     
-scenar1ac.set_values({'KRT1': 0.21})
+scenar1ac.set_values({'KRT1': 0.15})
 scenar1ac.set_values({'nplw0': 0.6})
 
 for _ in range(10):
@@ -957,7 +955,7 @@ data1 = list()
 data2 = list()
 data3 = list()
 data4 = list()
-for i in range(20, 1000):
+for i in range(20, 100):
     s1aa = scenar1aa.solutions[i]
     s1ab = scenar1ab.solutions[i]
     s1ac = scenar1ac.solutions[i]    
@@ -1271,9 +1269,9 @@ for i in range(20, 1000):
     s1ac = scenar1ac.solutions[i]
     s1bc = scenar1bc.solutions[i]
     base = baseline.solutions[i]
-    data1.append((100000000 + s1aa['V_b1']) / (100000000 + s1ba['V_b1']))
-    data2.append((100000000 + s1ab['V_b1']) / (100000000 + s1bb['V_b1']))
-    data3.append((100000000 + s1ac['V_b1']) / (100000000 + s1bc['V_b1']))
+    data1.append((s1aa['V_b1']) / (s1ba['V_b1']))
+    data2.append((s1ab['V_b1']) / (s1bb['V_b1']))
+    data3.append((s1ac['V_b1']) / (s1bc['V_b1']))
     
 fig = plt.figure()
 axes = fig.add_axes([0.1, 0.1, 1.1, 1.1])
@@ -1310,7 +1308,7 @@ data10 = list()
 data11 = list()
 data12 = list()
 
-for i in range(20, 50):
+for i in range(20, 55):
     s1ab = scenar1ab.solutions[i]
     s1bb = scenar1bb.solutions[i]
     base = baseline.solutions[i]
@@ -1473,7 +1471,7 @@ data2 = list()
 data3 = list()
 data4 = list()
 
-for i in range(30, 200):
+for i in range(30, 100):
     base = baseline.solutions[i]
     s2aa = scenar2aa.solutions[i]
     s2ab = scenar2ab.solutions[i]
@@ -1633,7 +1631,7 @@ g2, = axes.plot(data2, linestyle=':', color='k', label='-20% shock')
 
 plt.legend(handles=[g1,g2], prop={'family': 'Times New Roman', 'size':12})
 
-fig.text(0.1, -.09, caption);
+fig.text(0.1, -.09, caption, csfont);
 
 #%%
     
@@ -1667,7 +1665,7 @@ g2, = axes.plot(data2, linestyle=':', color='k', label='-20% shock')
 
 plt.legend(handles=[g1,g2], prop={'family': 'Times New Roman', 'size':12})
 
-fig.text(0.1, -.09, caption);
+fig.text(0.1, -.09, caption, csfont);
 
 #%%
     
@@ -1701,7 +1699,7 @@ g2, = axes.plot(data2, linestyle=':', color='k', label='-20% shock')
 
 plt.legend(handles=[g1,g2], prop={'family': 'Times New Roman', 'size':12})
 
-fig.text(0.1, -.09, caption);
+fig.text(0.1, -.09, caption, csfont);
 
 #%%
     
@@ -1735,7 +1733,7 @@ g2, = axes.plot(data2, linestyle=':', color='k', label='-20% shock')
 
 plt.legend(handles=[g1,g2], prop={'family': 'Times New Roman', 'size':12})
 
-fig.text(0.1, -.09, caption);
+fig.text(0.1, -.09, caption, csfont);
 
 
 
